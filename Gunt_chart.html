@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="desription" content="Διάγραμμα Gantt">
+    <meta name="author" content="Κωνσταντίνος Πουλιανίδης">
+    <meta name="Keywords" content="Πουλιανίδης">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Διάγραμμα_Gantt_Πουλιανίδης</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.1/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+            
+        }
+       
+        h1 {
+            color: #000000;
+            text-align: center;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3498DB;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #820202;
+        }
+
+        ul{
+            text-align: left;
+            line-height:3ch;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <h1>Διάγραμμα Gantt για την εκπόνηση της Διδακτορικής διατριβής (Κων/νος Πουλιανίδης)
+         με θέμα:</h1>
+    <header>
+        <h2>
+            Διδακτικές Μεθολογίες και Τεχνολογίες Πληροφορικής στην Λογιστική Εκπαίδευση:
+            Προετοιμασία επαγγελματιών για τον Ψηφιακό Μετασχηματισμό
+        </h2> 
+    </header>
+
+    <div id="chart_div"></div>
+    <button onclick="exportToExcel()">Κατεβάστε ως Excel</button>
+
+    <script type="text/javascript">
+        // Φόρτωση του πακέτου Google Charts για Gantt
+        google.charts.load('current', {'packages':['gantt']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Κωδικός Εργασίας');
+            data.addColumn('string', 'Όνομα Εργασίας');
+            data.addColumn('date', 'Ημερομηνία Έναρξης');
+            data.addColumn('date', 'Ημερομηνία Λήξης');
+            data.addColumn('number', 'Διάρκεια');
+            data.addColumn('number', 'Ποσοστό Ολοκλήρωσης');
+            data.addColumn('string', 'Εξαρτήσεις');
+
+            // Προσθήκη των εργασιών του έργου με νέες ημερομηνίες
+            data.addRows([
+                ['1', 'Βιβλιογραφική επισκόπηση', new Date(2024, 9, 1), new Date(2025, 9, 1), null, 15, null],
+                ['2', 'Εμβάθυνση στη μελέτη των μεθόδων', new Date(2025, 1, 1), new Date(2025, 10, 31), null, 0, '1'],
+                ['3', 'Σχεδιασμός της έρευνας πεδίου', new Date(2025, 11, 1), new Date(2026, 5, 1), null, 0, '2'],
+                ['4', 'Υλοποίηση της έρευνας πεδίου \n (συλλογή δεδομένων και \n διεξαγωγή πειράματος)', new Date(2026, 6, 1), new Date(2027, 6, 1), null, 0, '3'],
+                ['5', 'Επεξεργασία-ανάλυση αποτελεσμάτων, \n εξαγωγή συμπερασμάτων', new Date(2027, 7, 1), new Date(2028, 1, 1), null, 0, '4'],
+                ['6', 'Συγγραφή και ολοκλήρωση του τελικού \n κειμένου της διατριβής', new Date(2027, 9, 1), new Date(2028, 12, 31), null, 0, '5'],
+                ['7', 'Συμπλήρωση βιβλιογραφικής έρευνας', new Date(2025, 9, 1), new Date(2028, 12, 31), null, 5, '1']
+            ]);
+
+            var options = {
+                height: 470,
+                gantt: {
+                
+                    trackHeight: 60,
+                    barHeight: 35,
+                    labelStyle: {
+                        fontName: 'Arial',
+                        fontSize: 15,
+                        color: '#2C3E50'
+                        
+                    },
+                    criticalPathEnabled: true, // Επισημαίνει την κρίσιμη διαδρομή
+                    criticalPathStyle: {
+                        stroke: '#e64a19',
+                        strokeWidth: 5
+                    },
+                    innerGridTrack: {fill: '#f3f4f5'}, // Ανοιχτόχρωμο φόντο για γραμμές
+                    innerGridDarkTrack: {fill: '#eceff1'}, // Εναλλακτικό φόντο για γραμμές
+                    arrow: {
+                        angle: 100,
+                        width: 5,
+                        color: '#2C3E50',
+                        radius: 0
+                    }
+                }
+            };
+
+            var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+
+        // Λειτουργία εξαγωγής σε Excel
+        function exportToExcel() {
+            var data = [
+                ["Κωδικός Εργασίας", "Όνομα Εργασίας", "Ημερομηνία Έναρξης", "Ημερομηνία Λήξης", "Διάρκεια", "Ποσοστό Ολοκλήρωσης", "Εξαρτήσεις"],
+                ["1", "Βιβλιογραφική επισκόπηση", "01/09/2024", "30/09/2025", "12 μήνες", "15", ""],
+                ["2", "Εμβάθυνση στη μελέτη των μεθόδων", "01/01/2025", "31/10/2025", "10 μήνες", "0", "1"],
+                ["3", "Σχεδιασμός της έρευνας πεδίου", "01/11/2025", "31/05/2026", "6 μήνες", "0", "2"],
+                ["4", "Υλοποίηση της έρευνας πεδίου (συλλογή δεδομένων και διεξαγωγή πειράματος)", "01/06/2026", "30/06/2027", "12 μήνες", "0", "3"],
+                ["5", "Επεξεργασία-ανάλυση αποτελεσμάτων, εξαγωγή συμπερασμάτων", "01/07/2027", "30/01/2028", "6 μήνες", "0", "4"],
+                ["6", "Συγγραφή και ολοκλήρωση του τελικού κειμένου της διατριβής", "01/09/2027", "31/12/2028", "15 μήνες", "0", "5"],
+                ["7", "Συμπλήρωση βιβλιογραφικής έρευνας", "01/09/2024", "31/12/2028", "4 χρόνια", "5", "6"]
+            ];
+
+            var ws = XLSX.utils.aoa_to_sheet(data);
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Διάγραμμα Gantt");
+
+            XLSX.writeFile(wb, "gantt_chart_poulianidis_phd.xlsx");
+        }
+    </script>
+
+
+    <h2 id="notes_1">--------------------------- | Διευκρινήσεις σχετικά με το Διάγραμμα Gantt | ---------------------------</h2>
+    <p id="notes_2">
+        <ul>
+            <li>Στην Εμβάθυνση της μελέτης μεθόδων πραγματοποιείται η ολοκλήρωση της επεξεργασίας του θεωρητικού πλαισίου και οριστικοποίηση των υποθέσεων. </li>
+            <li>Όσον αφορά τον σχεδιασμό της έρευνας πεδίου, εδώ θα παρουσιαστεί το ολοκληρωμένο σχέδιο της έρευνας.</li>
+            <li>Αργότερα, στην υλοποίηση της έρευνας πεδίου (συλλογή δεδομένων και διεξαγωγή πειράματος) θα παρουσιαστούν τα συμπληρωμένα ερωτηματολόγια (ποσοτική έρευνα).</li>
+            <li>Στην επεξεργασία – ανάλυση αποτελεσμάτων, εξαγωγή συμπερασμάτων, θα παρουσιαστεί το πακέτο αποτελεσμάτων και συμπερασμάτων.</li>
+            <li>Τέλος, στη συγγραφή και ολοκλήρωση του τελικού κειμένου της διατριβής η οποία θα ξεκινήσει από το δεύτερο έτος, θα πραγματοποιηθεί συγγραφή συμπερασμάτων από τη βιβλιογραφική επισκόπηση και της ενότητας για τις ερευνητικές υποθέσεις. Στο τρίτο έτος Θα γίνει συγγραφή της ενότητας για τις διαδικασίες συλλογής δεδομένων και τις στατιστικές δοκιμασίες.  Το τέταρτο έτος ολοκληρώνεται με το τελικό κείμενο διατριβής. </li>
+        </ul>
+    </p>
+
+
+
+
+</body>
+</html>
